@@ -190,6 +190,33 @@ private final class BackdropLayerDelegate: NSObject, CALayerDelegate {
     }
 }
 
+// MARK: - HighlightTrackingButton
+
+private final class HighlightTrackingButton: UIButton {
+    var highlightChanged: ((Bool) -> Void)?
+
+    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        let result = super.beginTracking(touch, with: event)
+        highlightChanged?(true)
+        return result
+    }
+
+    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        super.endTracking(touch, with: event)
+        highlightChanged?(false)
+    }
+
+    override func cancelTracking(with event: UIEvent?) {
+        super.cancelTracking(with: event)
+        highlightChanged?(false)
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        highlightChanged?(false)
+    }
+}
+
 // MARK: - HorizontalFilterView
 
 class HorizontalFilterView: UIView {
@@ -252,9 +279,10 @@ class HorizontalFilterView: UIView {
         return iv
     }()
 
-    private var buttons: [UIButton] = []
+    private var buttons: [HighlightTrackingButton] = []
     private var currentIsDark: Bool = false
     private var lastLayoutSize: CGSize = .zero
+    private var activeHighlightCount: Int = 0
 
     // MARK: - Init
 
@@ -296,7 +324,7 @@ class HorizontalFilterView: UIView {
     @available(iOS 26.0, *)
     private func setUpNativeGlass() {
         let glassEffect = UIGlassEffect(style: .regular)
-        glassEffect.isInteractive = false
+        glassEffect.isInteractive = true
         let effectView = UIVisualEffectView(effect: glassEffect)
         effectView.clipsToBounds = true
         self.nativeGlassView = effectView
@@ -438,13 +466,32 @@ class HorizontalFilterView: UIView {
         buttons.removeAll()
 
         for (index, title) in filters.enumerated() {
-            let button = UIButton(type: .system)
+            let button = HighlightTrackingButton(type: .custom)
             button.setTitle(title, for: .normal)
             button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
             button.setTitleColor(.label, for: .normal)
             button.tag = index
             button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
             button.addTarget(self, action: #selector(filterTapped(_:)), for: .touchUpInside)
+
+            button.highlightChanged = { [weak self, weak button] highlighted in
+                guard let self, let button else { return }
+                if highlighted {
+                    self.activeHighlightCount += 1
+                    button.titleLabel?.layer.removeAnimation(forKey: "opacity")
+                    button.titleLabel?.alpha = 0.4
+                    self.animateScaleDown()
+                } else {
+                    self.activeHighlightCount -= 1
+                    button.titleLabel?.alpha = 1.0
+                    button.titleLabel?.layer.animateOpacity(from: 0.4, to: 1.0, duration: 0.2)
+                    if self.activeHighlightCount <= 0 {
+                        self.activeHighlightCount = 0
+                        self.animateScaleUp()
+                    }
+                }
+            }
+
             stackView.addArrangedSubview(button)
             buttons.append(button)
         }
@@ -566,5 +613,54 @@ class HorizontalFilterView: UIView {
             CGPoint(x: contentOffsetX, y: 0),
             animated: animated
         )
+    }
+
+    // MARK: - Scale Animation (pre-iOS 26 press feedback)
+
+    private func animateScaleDown() {
+        if #available(iOS 26.0, *) {
+            // iOS 26 handles press feedback via isInteractive on glass effect
+            return
+        }
+        UIView.animate(
+            withDuration: 0.4,
+            delay: 0,
+            usingSpringWithDamping: 0.75,
+            initialSpringVelocity: 0.5,
+            options: [.beginFromCurrentState],
+            animations: {
+                self.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
+            }
+        )
+    }
+
+    private func animateScaleUp() {
+        if #available(iOS 26.0, *) {
+            return
+        }
+        UIView.animate(
+            withDuration: 0.4,
+            delay: 0,
+            usingSpringWithDamping: 0.75,
+            initialSpringVelocity: 0.5,
+            options: [.beginFromCurrentState],
+            animations: {
+                self.transform = .identity
+            }
+        )
+    }
+}
+
+// MARK: - CALayer Opacity Animation Helper
+
+private extension CALayer {
+    func animateOpacity(from: CGFloat, to: CGFloat, duration: CFTimeInterval) {
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = from
+        animation.toValue = to
+        animation.duration = duration
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        animation.isRemovedOnCompletion = true
+        add(animation, forKey: "opacity")
     }
 }
