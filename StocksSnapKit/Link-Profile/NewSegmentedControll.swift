@@ -37,14 +37,14 @@ extension SegmentedViewController: ScrollUISegmentControllerDelegate {
 }
 
 
-import SwiftUI
-
-struct PreviewView: SwiftUI.View {
-    var body: some SwiftUI.View {
-        SegmentedViewController().swiftUIView()
-    }
-}
-
-#Preview {
-    PreviewView()
-}
+//import SwiftUI
+//
+//struct PreviewView: SwiftUI.View {
+//    var body: some SwiftUI.View {
+//        SegmentedViewController().swiftUIView()
+//    }
+//}
+//
+//#Preview {
+//    PreviewView()
+//}

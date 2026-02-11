@@ -26,17 +26,25 @@ class LinkProfileVC: UIViewController, postsDidScrollDelegate {
     var parentCollection: UICollectionView?
     var childCollection: UICollectionView?
     
+    private let filterView = HorizontalFilterView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
         mainView.collectionView.panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
         userPostsViewController1.collectionView.panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
-        
+
         parentCollection = mainView.collectionView
         childCollection = userPostsViewController1.collectionView
-       
+
+        filterView.filters = ["All", "Gainers", "Losers", "Tech", "Finance", "Energy"]
+        filterView.onFilterSelected = { index in
+            print("Selected filter: \(index)")
+        }
+        view.addSubview(filterView)
+        filterView.easy.layout(Left(16), Right(16), Bottom(100), Height(40))
     }
     
     override func viewDidLayoutSubviews() {
@@ -717,15 +725,15 @@ extension UIView {
     }
 }
 
-//import SwiftUI
-//
-//struct PreviewView: SwiftUI.View {
-//    var body: some SwiftUI.View {
-//        UINavigationController(rootViewController: LinkProfileVC())
-//            .swiftUIView()
-//    }
-//}
-//
-//#Preview {
-//    PreviewView()
-//}
+import SwiftUI
+
+struct PreviewView: SwiftUI.View {
+    var body: some SwiftUI.View {
+        UINavigationController(rootViewController: LinkProfileVC())
+            .swiftUIView()
+    }
+}
+
+#Preview {
+    PreviewView()
+}
