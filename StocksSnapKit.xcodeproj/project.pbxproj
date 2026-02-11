@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		09278A112E43C25900BAB9B7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 09278A102E43C25900BAB9B7 /* Kingfisher */; };
+		09963DAC2F228FC800C9801F /* IGListDiffKit in Frameworks */ = {isa = PBXBuildFile; productRef = 09963DAB2F228FC800C9801F /* IGListDiffKit */; };
+		09963DAE2F228FC800C9801F /* IGListKit in Frameworks */ = {isa = PBXBuildFile; productRef = 09963DAD2F228FC800C9801F /* IGListKit */; };
+		09963DB02F228FC800C9801F /* IGListSwiftKit in Frameworks */ = {isa = PBXBuildFile; productRef = 09963DAF2F228FC800C9801F /* IGListSwiftKit */; };
+		099A43422F1A4B2200C6641C /* EasyPeasy in Frameworks */ = {isa = PBXBuildFile; productRef = 099A43412F1A4B2200C6641C /* EasyPeasy */; };
+		09FC020E2E433336007E422F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 09FC020D2E433336007E422F /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0944493E2E2B678000B14C6B /* StocksSnapKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StocksSnapKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +45,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				099A43422F1A4B2200C6641C /* EasyPeasy in Frameworks */,
+				09278A112E43C25900BAB9B7 /* Kingfisher in Frameworks */,
+				09963DAC2F228FC800C9801F /* IGListDiffKit in Frameworks */,
+				09FC020E2E433336007E422F /* SnapKit in Frameworks */,
+				09963DAE2F228FC800C9801F /* IGListKit in Frameworks */,
+				09963DB02F228FC800C9801F /* IGListSwiftKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +93,12 @@
 			);
 			name = StocksSnapKit;
 			packageProductDependencies = (
+				09FC020D2E433336007E422F /* SnapKit */,
+				09278A102E43C25900BAB9B7 /* Kingfisher */,
+				099A43412F1A4B2200C6641C /* EasyPeasy */,
+				09963DAB2F228FC800C9801F /* IGListDiffKit */,
+				09963DAD2F228FC800C9801F /* IGListKit */,
+				09963DAF2F228FC800C9801F /* IGListSwiftKit */,
 			);
 			productName = StocksSnapKit;
 			productReference = 0944493E2E2B678000B14C6B /* StocksSnapKit.app */;
@@ -91,7 +112,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					0944493D2E2B678000B14C6B = {
 						CreatedOnToolsVersion = 16.0;
@@ -107,6 +128,12 @@
 			);
 			mainGroup = 094449352E2B678000B14C6B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				09FC020C2E433336007E422F /* XCRemoteSwiftPackageReference "SnapKit" */,
+				09278A0F2E43C25900BAB9B7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				099A43402F1A4B2200C6641C /* XCRemoteSwiftPackageReference "EasyPeasy" */,
+				09963DAA2F228FC800C9801F /* XCRemoteSwiftPackageReference "IGListKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0944493F2E2B678000B14C6B /* Products */;
 			projectDirPath = "";
@@ -145,14 +172,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7S7UAAX86U;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StocksSnapKit/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -173,14 +199,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7S7UAAX86U;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StocksSnapKit/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -229,6 +254,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7S7UAAX86U;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -252,6 +278,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -292,6 +319,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7S7UAAX86U;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -308,6 +336,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -335,6 +364,74 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		09278A0F2E43C25900BAB9B7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.5.0;
+			};
+		};
+		09963DAA2F228FC800C9801F /* XCRemoteSwiftPackageReference "IGListKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Instagram/IGListKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+		099A43402F1A4B2200C6641C /* XCRemoteSwiftPackageReference "EasyPeasy" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nakiostudio/EasyPeasy";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.0;
+			};
+		};
+		09FC020C2E433336007E422F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		09278A102E43C25900BAB9B7 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 09278A0F2E43C25900BAB9B7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		09963DAB2F228FC800C9801F /* IGListDiffKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 09963DAA2F228FC800C9801F /* XCRemoteSwiftPackageReference "IGListKit" */;
+			productName = IGListDiffKit;
+		};
+		09963DAD2F228FC800C9801F /* IGListKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 09963DAA2F228FC800C9801F /* XCRemoteSwiftPackageReference "IGListKit" */;
+			productName = IGListKit;
+		};
+		09963DAF2F228FC800C9801F /* IGListSwiftKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 09963DAA2F228FC800C9801F /* XCRemoteSwiftPackageReference "IGListKit" */;
+			productName = IGListSwiftKit;
+		};
+		099A43412F1A4B2200C6641C /* EasyPeasy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 099A43402F1A4B2200C6641C /* XCRemoteSwiftPackageReference "EasyPeasy" */;
+			productName = EasyPeasy;
+		};
+		09FC020D2E433336007E422F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 09FC020C2E433336007E422F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 094449362E2B678000B14C6B /* Project object */;
 }

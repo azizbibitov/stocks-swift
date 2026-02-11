@@ -1,0 +1,303 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Repository",
+        "description": "Initialize a new Swift project with UIKit and set up the project repository with necessary configurations.",
+        "details": "1. Create a new Xcode project using the 'App' template with Swift as the language and UIKit as the interface.\n2. Initialize a Git repository for version control.\n3. Configure the project's basic settings, such as bundle identifier and app name.\n4. Add a basic project structure with folders for Models, Views, Controllers, and Networking.\n5. Install SnapKit using Swift Package Manager (SPM). In Xcode, go to File > Add Packages and search for 'SnapKit'. Use the latest version of SnapKit (5.0.1 at the time of writing).",
+        "testStrategy": "Verify that the project builds successfully and that SnapKit is correctly integrated by importing it into a Swift file and building the project.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Implement Networking Layer",
+        "description": "Implement the networking layer to fetch stock data from a public API using URLSession.",
+        "details": "1. Identify a free, public stock data API (e.g., Alpha Vantage, IEX Cloud).  Alpha Vantage requires an API key, so create an account and obtain one.\n2. Create a `Stock` model struct to represent the data received from the API (companyName, stockTicker, currentPrice, priceChange, percentageChange, logoURL).\n3. Implement a `NetworkManager` class with a function to fetch stock data from the API using `URLSession`. Handle potential errors such as invalid API key, rate limiting, and network connectivity issues.\n4. Use `JSONDecoder` to parse the JSON response into an array of `Stock` objects.\n5. Example code:\n```swift\nstruct Stock: Codable {\n    let companyName: String\n    let stockTicker: String\n    let currentPrice: Double\n    let priceChange: Double\n    let percentageChange: Double\n    let logoURL: String\n}\n\nclass NetworkManager {\n    static let shared = NetworkManager()\n    private let apiKey = \"YOUR_API_KEY\" // Replace with your actual API key\n    private let baseURL = \"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=\"\n\n    func getStockData(symbol: String, completion: @escaping (Result<Stock, Error>) -> Void) {\n        guard let url = URL(string: baseURL + symbol + \"&apikey=\\(apiKey)\") else { return }\n\n        URLSession.shared.dataTask(with: url) { data, response, error in\n            if let error = error {\n                completion(.failure(error))\n                return\n            }\n\n            guard let data = data else {\n                completion(.failure(NSError(domain: \"\", code: 0, userInfo: [NSLocalizedDescriptionKey: \"No data received.\"]))) \n                return\n            }\n\n            do {\n                let decodedData = try JSONDecoder().decode(Stock.self, from: data)\n                completion(.success(decodedData))\n            } catch {\n                completion(.failure(error))\n            }\n        }.resume()\n    }\n}\n```",
+        "testStrategy": "Create a unit test to verify that the `NetworkManager` can successfully fetch and parse stock data from the API. Check for correct data mapping and error handling.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Stock Model",
+            "description": "Create the `Stock` model struct to represent the stock data received from the API. The model should include properties for companyName, stockTicker, currentPrice, priceChange, percentageChange, and logoURL.",
+            "dependencies": [],
+            "details": "Create a Swift struct named `Stock` that conforms to the `Codable` protocol. Define the properties as specified in the description, ensuring correct data types (String for companyName, stockTicker, and logoURL; Double for currentPrice, priceChange, and percentageChange).",
+            "status": "done",
+            "testStrategy": "Create a unit test to ensure that the `Stock` model can be initialized with valid data and that its properties are correctly set."
+          },
+          {
+            "id": 2,
+            "title": "Implement NetworkManager Class",
+            "description": "Create the `NetworkManager` class as a singleton to handle network requests. This class will contain the API key and base URL, and will be responsible for fetching data from the API.",
+            "dependencies": [],
+            "details": "Create a Swift class named `NetworkManager`. Implement it as a singleton using a shared instance. Store the API key and base URL as private constants. Ensure the API key is securely stored and not hardcoded directly in the code. Consider using a configuration file or environment variable.",
+            "status": "done",
+            "testStrategy": "Create a unit test to verify that the `NetworkManager` singleton instance is correctly initialized and that the API key and base URL are properly stored."
+          },
+          {
+            "id": 3,
+            "title": "Implement Fetch Stock Data Function",
+            "description": "Implement the `getStockData` function in the `NetworkManager` to fetch stock data from the API using `URLSession`. This function should take a stock ticker as input and return a `Result` type containing either the `Stock` object or an `Error`.",
+            "dependencies": [
+              "2.1",
+              "2.2"
+            ],
+            "details": "Implement the `getStockData` function in the `NetworkManager` class. Use `URLSession.dataTask(with:completionHandler:)` to make the API request. Construct the URL using the base URL, stock ticker, and API key. Handle potential URL creation errors. Use a `Result` type to return either the `Stock` object or an `Error`.",
+            "status": "done",
+            "testStrategy": "Create a unit test to verify that the `getStockData` function successfully fetches and returns stock data from the API for a valid stock ticker. Also, test with an invalid stock ticker and ensure that the function returns an appropriate error."
+          },
+          {
+            "id": 4,
+            "title": "Implement JSON Parsing",
+            "description": "Implement JSON parsing using `JSONDecoder` to convert the JSON response from the API into a `Stock` object. Handle potential decoding errors.",
+            "dependencies": [
+              "2.3"
+            ],
+            "details": "Within the `getStockData` function, use `JSONDecoder` to decode the JSON response into a `Stock` object. Use a `do-catch` block to handle potential decoding errors. If an error occurs, return a `.failure` result with the error. Ensure the JSON structure from the API matches the `Stock` model's properties.",
+            "status": "done",
+            "testStrategy": "Create a unit test to verify that the JSON response from the API is correctly parsed into a `Stock` object. Test with different JSON responses, including edge cases and potential error scenarios."
+          },
+          {
+            "id": 5,
+            "title": "Implement Error Handling for Network Requests",
+            "description": "Implement error handling for network requests, including handling invalid API key, rate limiting, and network connectivity issues. Return specific error types in the `Result`.",
+            "dependencies": [
+              "2.3",
+              "2.4"
+            ],
+            "details": "Within the `getStockData` function, handle potential errors such as invalid API key, rate limiting, and network connectivity issues. Check the HTTP status code of the response and return appropriate error types in the `.failure` case of the `Result`. Define custom error types for specific error scenarios (e.g., `InvalidAPIKeyError`, `RateLimitError`, `NetworkError`).",
+            "status": "done",
+            "testStrategy": "Create unit tests to simulate different error scenarios (e.g., invalid API key, rate limiting, network connectivity issues) and verify that the `getStockData` function returns the correct error type in each case."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Create Stock List Screen",
+        "description": "Create the Stock List screen to display the fetched stock data in a scrollable list.",
+        "details": "1. Create a `StockListViewController` using `UIKit`.\n2. Use a `UITableView` to display the list of stocks.\n3. Create a custom `StockTableViewCell` to display the stock information (company name, ticker, price, change, logo).\n4. Use SnapKit to define the layout constraints for the `StockTableViewCell` elements programmatically.\n5. Fetch the stock data using the `NetworkManager` and populate the `UITableView` with the data.\n6. Use `Kingfisher` library (version 7.0 or later) to load and display the company logo from the URL. Add Kingfisher using Swift Package Manager.\n7. Implement the `UITableViewDataSource` and `UITableViewDelegate` protocols.",
+        "testStrategy": "Manually verify that the stock list is displayed correctly with all the required information. Check that the company logos are loaded correctly and that the list is scrollable.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement StockListViewController and UITableView Setup",
+            "description": "Create the `StockListViewController` and set up the `UITableView`. This includes creating the view controller, adding the table view as a subview, setting up constraints using SnapKit, and registering the custom `StockTableViewCell`.",
+            "dependencies": [],
+            "details": "1. Create a new `StockListViewController` class inheriting from `UIViewController`. \n2. Instantiate a `UITableView` and add it as a subview to the `StockListViewController`'s view.\n3. Use SnapKit to set constraints for the `UITableView` to fill the entire view.\n4. Register the `StockTableViewCell` with the `UITableView` using `register(_:forCellReuseIdentifier:)`.\n5. Set the `dataSource` and `delegate` of the `UITableView` to the `StockListViewController`.",
+            "status": "done",
+            "testStrategy": "Verify that the `UITableView` is displayed correctly within the `StockListViewController` and that the custom cell is registered correctly. Check that the table view fills the entire screen."
+          },
+          {
+            "id": 2,
+            "title": "Implement StockTableViewCell Layout with SnapKit",
+            "description": "Define the layout for the `StockTableViewCell` elements (company name, ticker, price, change, logo) using SnapKit. This involves adding the UI elements to the cell's content view and setting up constraints to position them correctly.",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "1. Add `UIImageView` (for logo), `UILabel` (for company name), `UILabel` (for ticker), `UILabel` (for price), and `UILabel` (for change) as subviews to the `contentView` of `StockTableViewCell`.\n2. Use SnapKit to define constraints for each element. Ensure the logo is positioned on the left, company name and ticker are stacked vertically to the right of the logo, and price and change are positioned on the right side of the cell.\n3. Consider different screen sizes and orientations when defining constraints to ensure the layout is responsive.",
+            "status": "pending",
+            "testStrategy": "Manually inspect the layout of the `StockTableViewCell` in different screen sizes and orientations. Verify that all elements are positioned correctly and that the layout is responsive."
+          },
+          {
+            "id": 3,
+            "title": "Fetch Stock Data and Populate UITableView",
+            "description": "Fetch the stock data using the `NetworkManager` and populate the `UITableView` with the fetched data. This involves calling the `NetworkManager` to retrieve the data, parsing the response, and updating the `UITableView`'s data source.",
+            "dependencies": [
+              "3.2"
+            ],
+            "details": "1. In `StockListViewController`, call the `NetworkManager` to fetch stock data.\n2. Upon successful retrieval, parse the JSON response into an array of `Stock` model objects.\n3. Store the array of `Stock` objects in a property of `StockListViewController`.\n4. Implement the `UITableViewDataSource` methods (`numberOfRowsInSection` and `cellForRowAt`) to populate the `UITableView` with the fetched data.\n5. In `cellForRowAt`, configure the `StockTableViewCell` with the data from the corresponding `Stock` object.",
+            "status": "pending",
+            "testStrategy": "Verify that the `UITableView` is populated with the fetched stock data. Check that the company name, ticker, price, and change are displayed correctly for each stock. Use a mock API response to test different scenarios, such as empty data or error responses."
+          },
+          {
+            "id": 4,
+            "title": "Implement Company Logo Loading with Kingfisher",
+            "description": "Use the Kingfisher library to load and display the company logo from the URL provided in the stock data. This involves importing Kingfisher, using the `kf.setImage(with:)` method on the `UIImageView` in the `StockTableViewCell`, and handling potential errors.",
+            "dependencies": [
+              "3.3"
+            ],
+            "details": "1. Import the Kingfisher library in `StockTableViewCell.swift`.\n2. In the `cellForRowAt` method of `StockListViewController`, use `kf.setImage(with:)` on the `UIImageView` (logo) in `StockTableViewCell` to load the image from the `logoURL` property of the `Stock` object.\n3. Provide a placeholder image and error handling using Kingfisher's options.\n4. Ensure Kingfisher's cache is properly configured for optimal performance.",
+            "status": "pending",
+            "testStrategy": "Verify that the company logos are loaded and displayed correctly in the `StockTableViewCell`. Check that the placeholder image is displayed while the logo is loading and that error handling is implemented correctly. Test with different image URLs, including invalid URLs, to ensure the app handles errors gracefully."
+          },
+          {
+            "id": 5,
+            "title": "Implement Search Functionality",
+            "description": "Add a search bar to the `StockListViewController` to allow users to filter the stock list based on company name or ticker. This involves adding a `UISearchBar` to the view, implementing the `UISearchBarDelegate` protocol, and filtering the stock data based on the search query.",
+            "dependencies": [
+              "3.4"
+            ],
+            "details": "1. Add a `UISearchBar` to the `StockListViewController`'s view, typically at the top of the screen, using SnapKit for constraints.\n2. Set the `delegate` of the `UISearchBar` to the `StockListViewController`.\n3. Implement the `UISearchBarDelegate` methods, such as `searchBar(_:textDidChange:)`, to filter the stock data based on the search query.\n4. Create a filtered array of `Stock` objects based on the search query.\n5. Update the `UITableView`'s data source with the filtered array and reload the table view.",
+            "status": "pending",
+            "testStrategy": "Verify that the search functionality works correctly. Check that the stock list is filtered correctly based on the search query. Test with different search queries, including partial matches and case-insensitive searches. Ensure that the search results are updated in real-time as the user types."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Implement Search Functionality",
+        "description": "Implement the search functionality to filter the stock list based on company name or ticker.",
+        "details": "1. Add a `UISearchBar` to the `StockListViewController`.\n2. Implement the `UISearchBarDelegate` protocol.\n3. Filter the stock data based on the search query.  Update the `UITableView` with the filtered results.\n4. Perform the search on a background thread to avoid blocking the main thread and ensure a smooth user experience.\n5. Use `DispatchQueue.global(qos: .userInitiated).async` for background filtering and `DispatchQueue.main.async` to update the UI.",
+        "testStrategy": "Test the search functionality by entering different company names and ticker symbols. Verify that the list is filtered correctly and that the search results are displayed in real-time.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Favorites Feature",
+        "description": "Implement the Favorites feature to allow users to add and remove stocks from their favorites list.",
+        "details": "1. Add a visual indicator (e.g., a star icon) to each `StockTableViewCell`.\n2. Implement a tap gesture recognizer on the star icon.\n3. When the star icon is tapped, add or remove the corresponding stock from the user's favorites list.\n4. Update the star icon's appearance to reflect the stock's favorite status.",
+        "testStrategy": "Manually test the Favorites feature by adding and removing stocks from the favorites list. Verify that the star icon is updated correctly and that the correct stocks are added to and removed from the list.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Local Data Persistence",
+        "description": "Implement local data persistence to save the user's favorite stocks using UserDefaults.",
+        "details": "1. Create a `FavoritesManager` class to handle saving and retrieving favorite stocks from `UserDefaults`.\n2. Use `UserDefaults` to store an array of stock tickers representing the user's favorite stocks.\n3. When a stock is added to or removed from the favorites list, update the `UserDefaults` accordingly.\n4. Load the favorite stocks from `UserDefaults` when the app launches.\n5. Example code:\n```swift\nclass FavoritesManager {\n    static let shared = FavoritesManager()\n    private let favoritesKey = \"favoriteStocks\"\n\n    func saveFavorites(favorites: [String]) {\n        UserDefaults.standard.set(favorites, forKey: favoritesKey)\n    }\n\n    func loadFavorites() -> [String] {\n        return UserDefaults.standard.stringArray(forKey: favoritesKey) ?? []\n    }\n}\n```",
+        "testStrategy": "Test the local data persistence by adding stocks to the favorites list, closing the app, and reopening it. Verify that the favorite stocks are still present in the list.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Create Favorites Screen",
+        "description": "Create a separate Favorites tab or screen to display only the user's favorite stocks.",
+        "details": "1. Create a `FavoritesViewController` using `UIKit`.\n2. Use a `UITableView` to display the list of favorite stocks.\n3. Populate the `UITableView` with the favorite stocks retrieved from `UserDefaults`.\n4. Add a tab bar item to the main tab bar controller to navigate to the `FavoritesViewController`.\n5. Update the `FavoritesViewController` whenever the user adds or removes a stock from the favorites list in the `StockListViewController`.",
+        "testStrategy": "Manually verify that the Favorites tab displays only the stocks that have been added to the favorites list. Check that the list is updated correctly when stocks are added or removed from the favorites list in the Stock List screen.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement UI/UX Enhancements",
+        "description": "Implement UI/UX enhancements to match the provided design mockups, including smooth animations and transitions.",
+        "details": "1. Review the design mockups and identify any UI/UX enhancements that need to be implemented.\n2. Use `UIView.animate(withDuration:animations:)` to create smooth animations and transitions between screens and UI elements.\n3. Pay attention to details such as color schemes, font styles, and spacing to ensure that the app's interface closely matches the design mockups.\n4. Consider using a UI testing framework like XCUITest to automate UI testing and ensure that the app's UI/UX remains consistent over time.",
+        "testStrategy": "Manually verify that the app's UI/UX matches the provided design mockups. Check that the animations and transitions are smooth and that the app is visually appealing.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          4,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Error Handling",
+        "description": "Implement error handling for network requests, including displaying user-friendly error messages.",
+        "details": "1. In the `NetworkManager`, handle potential errors such as invalid API key, rate limiting, and network connectivity issues.\n2. Display user-friendly error messages to the user using `UIAlertController`.\n3. Provide options for the user to retry the request or dismiss the error message.\n4. Log errors to a logging service such as Firebase Crashlytics for debugging purposes.",
+        "testStrategy": "Simulate network errors and verify that the app displays user-friendly error messages. Check that the error messages are informative and that the user is given options to retry the request or dismiss the error message.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Write Unit Tests",
+        "description": "Write unit tests to ensure code quality and prevent regressions.",
+        "details": "1. Use XCTest to write unit tests for the `NetworkManager`, `FavoritesManager`, and other key classes.\n2. Test edge cases and error conditions to ensure that the code is robust and reliable.\n3. Use code coverage tools to identify areas of the code that are not covered by unit tests.\n4. Aim for a code coverage of at least 80%.",
+        "testStrategy": "Run all unit tests and verify that they pass. Check code coverage to ensure that the code is adequately tested.",
+        "priority": "low",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Write UI Tests",
+        "description": "Write UI tests to validate the user interface and user flows.",
+        "details": "1. Use XCUITest to write UI tests for the Stock List screen, Search functionality, and Favorites feature.\n2. Test user flows such as adding a stock to the favorites list, searching for a stock, and navigating between tabs.\n3. Ensure that the UI tests are reliable and do not flake.",
+        "testStrategy": "Run all UI tests and verify that they pass. Check that the UI tests cover all key user flows.",
+        "priority": "low",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Refactor Code",
+        "description": "Refactor code for better readability and maintainability.",
+        "details": "1. Review the code and identify areas that can be refactored for better readability and maintainability.\n2. Use SOLID principles to guide the refactoring process.\n3. Extract common code into reusable components.\n4. Improve code documentation.",
+        "testStrategy": "Manually review the code and verify that it is well-structured, readable, and maintainable. Check that the code is well-documented and that the SOLID principles have been applied.",
+        "priority": "low",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-06T07:30:55.261Z",
+      "updated": "2025-08-06T16:36:54.181Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

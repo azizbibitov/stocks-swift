@@ -1,0 +1,56 @@
+### Product Requirements Document (PRD)
+
+---
+
+#### 1. Product Overview
+
+The goal of this project is to create a mobile application for tracking stock market data. This app will provide users with a real-time list of stocks, the ability to search for specific companies, and a feature to save their favorite stocks for easy monitoring.
+
+#### 2. Goals & Success Metrics
+
+The primary goal is to deliver a functional and user-friendly stock-tracking app. Success will be measured by the following criteria:
+
+* The application successfully displays real-time stock data.
+* Users can effectively search for stocks by name or ticker.
+* The "Favorites" feature allows users to add, remove, and view their chosen stocks.
+* The app's UI/UX accurately reflects the provided design.
+* The codebase is clean, well-structured, and easy to expand upon.
+
+---
+
+#### 3. User Stories
+
+**As a user, I want to...**
+
+* ...view a list of stocks so I can see their current prices and daily changes.
+* ...search for a specific company by its name or ticker to quickly find the stock I'm interested in.
+* ...add a stock to a "Favorites" list so I can track it more easily.
+* ...remove a stock from my "Favorites" list if I am no longer interested in it.
+* ...view all my favorite stocks in a separate, dedicated tab.
+* ...have my favorite stocks saved locally so they are still there when I reopen the app.
+
+---
+
+#### 4. Functional Requirements
+
+* **Stock List Screen:** Display a scrollable list of stocks. Each list item must show:
+    * Company Name
+    * Stock Ticker
+    * Current Price
+    * Price Change (absolute value and percentage)
+    * Company Logo
+* **Search Functionality:** Implement a search bar that filters the main stock list. The search should work based on a company's name or its ticker symbol.
+* **Favorites Feature:**
+    * Add a visual indicator (e.g., a star icon) to each stock in the list.
+    * Tapping the indicator should add or remove the stock from the user's favorites.
+    * Create a separate "Favorites" tab or screen that only displays stocks the user has saved.
+* **Local Data Persistence:** The list of favorite stocks must be saved locally on the device using a persistence solution (e.g., `UserDefaults`, `CoreData`, `Realm`, or `FileStorage`).
+
+---
+
+#### 5. Non-Functional & Technical Requirements
+
+* **UI/UX:** The application's interface must closely match the provided design mockups. Smooth animations and transitions are highly desired.
+* **Technology Stack:** The project must be built using **Swift** and **UIKit**. **SnapKit** should be used for programmatic UI layout.
+* **API Integration:** The application must fetch real stock data from a free, public API using **URLSession**. The use of a live API is preferred over mock data and will be considered a strong positive.
+* **Code Quality:** The code must be clean, well-documented, and follow standard Swift best practices. It should be designed for future extensibility and maintainability.
